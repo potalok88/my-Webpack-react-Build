@@ -1,0 +1,8 @@
+{
+  "name": "my-Webpack-react-Build",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/potalok88/my-Webpack-react-Build.git",
+  "author": "pavel antsiferov <pollop88@yandex.ru>",
+  "license": "MIT"
+}
