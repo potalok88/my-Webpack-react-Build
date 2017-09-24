@@ -7,6 +7,7 @@ const devserver = require('./webpack/devserver')
 const sass = require('./webpack/sass')
 const css = require('./webpack/css')
 const extractCss = require('./webpack/css.extract')
+const unglifyJs = require('./webpack/js.unglify')
 
 const PATHS = {
     source: path.join(__dirname, 'src'),
@@ -35,6 +36,10 @@ const common = merge({
             }),
             new webpack.optimize.CommonsChunkPlugin({
                 name: 'common'
+            }),
+            new webpack.ProvidePlugin({
+                $: 'jquery',
+                jQuery: 'jquery'
             })
         ]
     },
@@ -46,7 +51,8 @@ module.exports = function (env) {
     if (env === 'production') {
         return merge([
             common,
-            extractCss()
+            extractCss(),
+            unglifyJs()
         ])
     }
 
