@@ -3,7 +3,7 @@ module.exports = function (paths) {
         module: {
             rules: [
                 {
-                    test: /.css$/,
+                    test: /\.css$/,
                     include: paths,
                     use: [
                         'style-loader',

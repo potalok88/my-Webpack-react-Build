@@ -8,6 +8,7 @@ const sass = require('./webpack/sass')
 const css = require('./webpack/css')
 const extractCss = require('./webpack/css.extract')
 const unglifyJs = require('./webpack/js.unglify')
+const images = require('./webpack/images')
 
 const PATHS = {
     source: path.join(__dirname, 'src'),
@@ -43,7 +44,8 @@ const common = merge({
             })
         ]
     },
-    pug()
+    pug(),
+    images()
 )
 
 
