@@ -1,7 +1,7 @@
-const HappyPack = require('happypack');
 const path = require('path')
 const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HappyPack = require('happypack');
 const devserver = require('./webpack/devserver')
 const babel = require('./webpack/babel')
 const css = require('./webpack/css')
@@ -45,8 +45,6 @@ const common = merge({
     },
     babel()
 )
-
-console.log(common)
 
 
 module.exports = function (env) {
