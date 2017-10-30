@@ -1,14 +1,13 @@
+const HappyPack = require('happypack');
 const path = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const merge = require('webpack-merge')
-const pug = require('./webpack/pug')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const devserver = require('./webpack/devserver')
-const sass = require('./webpack/sass')
+const babel = require('./webpack/babel')
 const css = require('./webpack/css')
 const extractCss = require('./webpack/css.extract')
 const unglifyJs = require('./webpack/js.unglify')
-const images = require('./webpack/images')
+
 
 const PATHS = {
     source: path.join(__dirname, 'src'),
@@ -17,36 +16,37 @@ const PATHS = {
 
 const common = merge({
         entry: {
-            'index': PATHS.source + '/pages/index/index.js',
-            'blog': PATHS.source + '/pages/blog/blog.js',
+            'main': [
+                './src/client.js',
+            ]
         },
         output: {
             path: PATHS.build,
-            filename: 'js/[name].js'
+            filename: 'js/bundle.js'
+        },
+
+        resolve: {
+            modules: ['node_modules'],
+            extensions: [".js", ".json", ".jsx", ".css"]
+        },
+        module: {
+
         },
         plugins: [
+            new HappyPack({
+                loaders: ['babel-loader']
+            }),
             new HtmlWebpackPlugin({
                 filename: 'index.html',
                 chunks: ['index', 'common'],
-                template: PATHS.source + '/pages/index/index.pug',
+                template: PATHS.source + '/index.html',
             }),
-            new HtmlWebpackPlugin({
-                filename: 'blog.html',
-                chunks: ['blog', 'common'],
-                template: PATHS.source + '/pages/blog/blog.pug',
-            }),
-            new webpack.optimize.CommonsChunkPlugin({
-                name: 'common'
-            }),
-            new webpack.ProvidePlugin({
-                $: 'jquery',
-                jQuery: 'jquery'
-            })
         ]
     },
-    pug(),
-    images()
+    babel()
 )
+
+console.log(common)
 
 
 module.exports = function (env) {
@@ -61,9 +61,7 @@ module.exports = function (env) {
     if (env === 'development') {
         return merge([
             common,
-            devserver(),
-            sass(),
-            css()
+            devserver()
         ])
     }
 
