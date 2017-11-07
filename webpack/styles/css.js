@@ -3,10 +3,10 @@ module.exports = function () {
         module: {
             loaders: [
                 {
-                    test: /\.js[x]?$/,
+                    test: /\.scss$/,
                     exclude: /node_modules/,
-                    loader: 'happypack/loader?id=babel',
-                },
+                    loader: 'happypack/loader?id=css',
+                }
             ]
         }
     }

@@ -4,8 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HappyPack = require('happypack');
 const devserver = require('./webpack/devserver')
 const babel = require('./webpack/babel')
-const css = require('./webpack/css')
-const extractCss = require('./webpack/css.extract')
+const css = require('./webpack/styles/css')
+const cssProd = require('./webpack/styles/css.prod')
 const unglifyJs = require('./webpack/js.unglify')
 
 
@@ -14,51 +14,65 @@ const PATHS = {
     build: path.join(__dirname, 'build')
 };
 
-const common = merge({
-        entry: {
-            'main': [
-                './src/client.js',
+
+const getStyleLoaders = (env) => {
+    if(env === 'production'){
+        return 'css-loader?modules&importLoaders=2&sourceMap!sass-loader?outputStyle=expanded&sourceMap=true&sourceMapContents=true'
+    }
+    return 'css-loader?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!sass-loader?outputStyle=expanded&sourceMap'
+}
+
+const common = (env) => {
+
+    return merge({
+            entry: {
+                'main': [
+                    './src/client.js',
+                ]
+            },
+            output: {
+                path: PATHS.build,
+                filename: 'js/[hash].js'
+            },
+
+            resolve: {
+                modules: ['node_modules'],
+                extensions: [".js", ".json", ".jsx", ".css"]
+            },
+            plugins: [
+                new HappyPack({
+                    id: 'babel',
+                    threads: 4,
+                    loaders: ['babel-loader']
+                }),
+                new HappyPack({
+                    id: 'css',
+                    threads: 4,
+                    loaders: [getStyleLoaders(env)]
+                }),
+                new HtmlWebpackPlugin({
+                    template: 'src/index.ejs',
+                    filename: 'index.html',
+                }),
             ]
         },
-        output: {
-            path: PATHS.build,
-            filename: 'js/bundle.js'
-        },
-
-        resolve: {
-            modules: ['node_modules'],
-            extensions: [".js", ".json", ".jsx", ".css"]
-        },
-        module: {
-
-        },
-        plugins: [
-            new HappyPack({
-                loaders: ['babel-loader']
-            }),
-            new HtmlWebpackPlugin({
-                filename: 'index.html',
-                chunks: ['index', 'common'],
-                template: PATHS.source + '/index.html',
-            }),
-        ]
-    },
-    babel()
-)
-
+        babel(),
+    )
+}
 
 module.exports = function (env) {
     if (env === 'production') {
+
         return merge([
-            common,
-            extractCss(),
+            common(),
+            cssProd(),
             unglifyJs()
         ])
     }
-
     if (env === 'development') {
         return merge([
-            common,
+            common(),
+            css(),
             devserver()
         ])
     }

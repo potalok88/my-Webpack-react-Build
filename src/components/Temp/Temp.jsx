@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
+import styles from './Temp.scss'
 
 
 class Temp extends Component {
 
     render() {
         return (
-            <div>
+            <div className={styles.main}>
                 Temp
             </div>
         );
