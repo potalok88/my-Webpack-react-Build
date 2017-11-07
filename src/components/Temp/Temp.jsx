@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router'
 import styles from './Temp.scss'
+
 
 
 class Temp extends Component {
@@ -8,6 +10,9 @@ class Temp extends Component {
         return (
             <div className={styles.main}>
                 Temp
+                <Link to='/'>
+                    Главнаа
+                </Link>
             </div>
         );
     }
