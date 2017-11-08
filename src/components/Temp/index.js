@@ -1,1 +1,1 @@
-export { default } from './Temp'
+export { default } from './Temp';
