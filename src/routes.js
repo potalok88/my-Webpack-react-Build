@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Route, browserHistory } from 'react-router';
 
 import Temp from './components/Temp/Temp';
-import Main from './components/Main/Main';
+import Main from './containers/Main';
 
 
 export default () => (
