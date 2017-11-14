@@ -13,7 +13,7 @@ class Main extends Component {
       return (
         <div>
                 Главная
-                <Link to='/temp'>temp</Link>
+                <Link to='/exchangecurrency'>temp</Link>
           <br />
           <div>счетчик: {itemCount}</div>
           <button

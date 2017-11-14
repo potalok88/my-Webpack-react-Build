@@ -1,4 +1,6 @@
+require('babel-polyfill');
 const path = require('path');
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HappyPack = require('happypack');
@@ -14,6 +16,10 @@ const PATHS = {
   build: path.join(__dirname, 'build'),
 };
 
+const isVendorModule = module =>
+  // returns true for everything in node_modules
+  module.context && module.context.indexOf('node_modules') !== -1;
+
 
 const getStyleLoaders = (env) => {
   if (env === 'production') {
@@ -25,13 +31,12 @@ const getStyleLoaders = (env) => {
 const common = env => merge(
   {
     entry: {
-      main: [
-        './src/client.js',
-      ],
+      main: ['babel-polyfill', './src/client.js'],
     },
     output: {
       path: PATHS.build,
-      filename: 'js/[hash].js',
+      filename: '[name]-[hash].js',
+      chunkFilename: '[name]-[chunkhash].js',
     },
 
     resolve: {
@@ -52,6 +57,17 @@ const common = env => merge(
       new HtmlWebpackPlugin({
         template: 'src/index.ejs',
         filename: 'index.html',
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks: isVendorModule,
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'manifest',
+      }),
+      new webpack.SourceMapDevToolPlugin({
+        filename: '[file].map',
+        exclude: [/vendor(.*?)\.js$/, /manifest(.*?)\.js$/],
       }),
     ],
   },
